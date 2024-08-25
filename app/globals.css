@@ -31,3 +31,47 @@ body {
     text-wrap: balance;
   }
 }
+
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+ 
+input {
+  width: 80px;
+  height: 80px;
+  border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 72px;
+      cursor: not-allowed;
+      pointer-events: none;
+}
+ 
+input:focus {
+    outline: none;
+} 
+ 
+.input-match {
+  background-color: #4caf50;
+  color: black;
+}
+
+.input-unattempted {
+  background-color: #141414;
+  color: white;
+}
+
+.input-semi {
+  background-color: #ffeb3b;
+  color: black;
+}
+
+.input-mismatch {
+  background-color: #222222;
+  color: white;
+}
