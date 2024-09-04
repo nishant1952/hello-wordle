@@ -103,6 +103,9 @@ function endGame(): void {
     const key = e.key.toLowerCase();
     const index = Array.from(inputsRef.current?.children || []).indexOf(target);
     const rowIndex = Math.floor(index / columns);
+    const columnIndex = index % columns;
+    const rowStart = rowIndex * columns;
+    const lastIndexOfRow = rowStart + columns -1 ;
 
     if (rowIndex === activeRow) {
       if (key === 'backspace' || key === 'delete') {
@@ -119,8 +122,7 @@ function endGame(): void {
           setInputs(newInputs);
         }
         setLastFocusedIndex(index);
-      } else if (key === 'enter') {
-        const rowStart = rowIndex * columns;
+      } else if (key === 'enter' && index === lastIndexOfRow) {
 
         const rowEnd = rowStart + columns;
         const newStatus = [...inputStatus];
@@ -161,8 +163,10 @@ function endGame(): void {
             setActiveRow(activeRow + 1);
             const nextRowStart = (activeRow + 1) * columns;
             focusElement(inputsRef.current?.children[nextRowStart] as HTMLInputElement);
-          } else {
-          }
+          } 
+          // else case to handle
+          // else {
+          // }
         }
          const subset = newStatus.slice(rowStart, rowEnd + 1);
         if (subset.every(value => value === 'match')){
