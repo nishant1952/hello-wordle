@@ -1,4 +1,5 @@
 import Game from '../components/game';
+import AlertState from '../context/alert/AlertState';
 
 export default function Home() {
   return (

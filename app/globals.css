@@ -75,3 +75,25 @@ input:focus {
   background-color: #222222;
   color: white;
 }
+
+.alert-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.alert {
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  color: white;
+}
+
+.alert-success {
+  background-color: #4CAF50;
+}
+
+.alert-danger {
+  background-color: #f44336;
+}

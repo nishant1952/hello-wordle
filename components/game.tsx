@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useContext } from 'react';
+import AlertContext from '../context/alert/alertContext';
 
 interface GameProps {
   rows: number;
@@ -16,7 +17,13 @@ const Game: React.FC<GameProps> = ({ rows, columns }) => {
   const wordOfTheRound = 'ALIVE' ;
   const charsArray = wordOfTheRound.split('');
   const [isGameFinished, setIsGameFinished] = useState(false);
+  const alertContext = useContext(AlertContext);
+    if (!alertContext) {
+    return <div>Context is not provided!</div>; // Handle the case where the context is not provided
+  }
 
+  // Destructure context values
+  const { setAlert } = alertContext;
   const focusElement = useCallback((element: HTMLElement | null) => {
     if (element) {
       element.focus();
@@ -71,6 +78,7 @@ function endGame(): void {
     // Your game finish logic here
     setIsGameFinished(true);
     endGame();
+    setAlert('Game finished!', 'success');
     // document.body.style.cursor = 'none'; // Hide cursor
     
   };
