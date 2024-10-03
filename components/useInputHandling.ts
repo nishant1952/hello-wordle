@@ -12,11 +12,9 @@ export const useInputHandling = (
   inputStatus: InputStatus[],
   setInputStatus: React.Dispatch<React.SetStateAction<InputStatus[]>>,
   rows: number,
-  finishGame: () => void
+  finishGame: () => void,
+  makeGuess: (guess: string, row: number) => void
 ) => {
-  const wordOfTheRound = 'ALIVE';
-  const charsArray = wordOfTheRound.split('');
-
   const focusElement = useCallback((element: HTMLElement | null) => {
     if (element) {
       element.focus();
@@ -71,45 +69,13 @@ export const useInputHandling = (
         setLastFocusedIndex(index);
       } else if (key === 'enter' && index === lastIndexOfRow) {
         const rowEnd = rowStart + columns;
-        const newStatus = [...inputStatus];
         const rowInputs = inputs.slice(rowStart, rowEnd);
         
         if (rowInputs.every(input => input.trim() !== '')) {
-          const mismatchDict: { [key: string]: number } = {};
-          for (let i = rowStart; i < rowEnd; i++) {
-            const currentIndex = i % columns;
-            const answerAtIndex = charsArray[currentIndex];
-            const inputAtIndex = rowInputs[currentIndex];
-            const filteredChars = charsArray.filter((_, index) => index !== currentIndex);
-            if (answerAtIndex === inputAtIndex) {
-              newStatus[i] = 'match';
-            } else {
-              newStatus[i] = 'mismatch';  
-              mismatchDict[answerAtIndex] = (mismatchDict[answerAtIndex] || 0) + 1;
-            }
-          }
-          for (let i = rowStart; i < rowEnd; i++) {
-            const currentIndex = i % columns;
-            const inputAtIndex = rowInputs[currentIndex];
-            if (newStatus[i] === 'mismatch' && mismatchDict[inputAtIndex] && mismatchDict[inputAtIndex] > 0) {
-              newStatus[i] = 'semi';
-              mismatchDict[inputAtIndex]--;
-            }
-          }
-          setInputStatus(newStatus);
-        
-          if (activeRow < rows - 1) {
-            setActiveRow(activeRow + 1);
-            const nextRowStart = (activeRow + 1) * columns;
-            focusElement(inputsRef.current?.children[nextRowStart] as HTMLInputElement);
-          }
-          
-          const subset = newStatus.slice(rowStart, rowEnd);
-          if (subset.every(value => value === 'match')) {
-            finishGame();
-          }
+          const guess = rowInputs.join('');
+          makeGuess(guess, rowIndex);
         }
-      } else if ((/^[a-zA-Z]*$/.test(key)) && val !== '') {
+      } else if ((/^[a-zA-Z]$/.test(key)) && val !== '') {
         const next = target.nextElementSibling as HTMLInputElement;
         if (next && next.classList.contains('input') && Math.floor((index + 1) / columns) === activeRow) {
           const nextVal = next.value;
@@ -123,7 +89,7 @@ export const useInputHandling = (
         }
       }
     }
-  }, [inputs, focusElement, activeRow, columns, rows, inputsRef, setInputs, setLastFocusedIndex, setActiveRow, inputStatus, setInputStatus, finishGame, charsArray]);
+  }, [inputs, focusElement, activeRow, columns, rows, inputsRef, setInputs, setLastFocusedIndex, setActiveRow, makeGuess]);
 
   return { handleInput, handleKeyUp };
 };
